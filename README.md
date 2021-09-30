@@ -13,9 +13,12 @@ Méthodes :
 
 
 classe socketCaptor
+
     socketCaptor est le serveur socket.
     Il permet de créer un serveur afin d'y faire transiter des données en temps réel.
+
 Variables :
+
     - private int port;
     - private IPHostEntry ipHost;
     - private IPAddress ipAddr;
@@ -25,7 +28,9 @@ Variables :
     - private Socket clientSocket;
     - private int nbrUsers;
     - private socketChanels chanels;
+    
 Méthodes :
+
     - public void Start() Permet de démarrer le serveur sur un thread.
     - public IPAddress IP()
     - public int Port()
@@ -42,15 +47,20 @@ Méthodes :
 
 
 classe socketCaptor
+
     socketCaptor est le client socket.
     Il permet de créer un client afin d'envoyer des messages en temps réel à un serveur.
+
 Variables :
+
     - private IPHostEntry ipHost;
     - private IPAddress ipAddr;
     - private IPEndPoint localEndPoint;
     - private Socket sender;
     - private bool isConnected = false;
+
 Méthodes :
+
     - public void Connect()
     - public void Send(string message)
     - public void Close()
