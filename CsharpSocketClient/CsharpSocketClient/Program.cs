@@ -745,7 +745,7 @@ namespace socketCsharp
             ////////////////////////
 
             /*Instancie et Souscris l'émeteur à un serveur | peut se faire sur deux ligne*/
-            socketEmitor se = new socketEmitor().Subscribe();
+            socketEmitor se = new socketEmitor().Subscribe(/*Dois Contenir une adresse IPV6*/);
 
             /*Affiche les infos de l'émeteur*/
             se.Infos();
