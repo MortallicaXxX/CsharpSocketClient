@@ -9,7 +9,7 @@ using System.Text.Json;
 namespace socketCsharp
 {
 
-    public class Message
+    class Message
     {
 
         private string? _chanel = null;
@@ -130,6 +130,50 @@ namespace socketCsharp
 
     }
 
+    class socketSubscription
+    {
+
+        private List<socketEmitor> _subcriptions = new List<socketEmitor>();
+
+        public socketSubscription()
+        {
+
+        }
+
+        public void Add(string ipv6)
+        {
+            this._subcriptions.Add(new socketEmitor(ipv6));
+        }
+
+        public void Remove(string subIp)
+        {
+            int x = _subByIpv6(subIp);
+            if (x > -1)
+            {
+                this._subcriptions.RemoveAt(x);
+            }
+        }
+
+        private int _subByIpv6(string subIpv6)
+        {
+            for(int i = 0; i < this._subcriptions.Count; i++)
+            {
+                if (subIpv6 == this._subcriptions[i].IP().ToString()) return i;
+            }
+            return -1;
+        }
+
+        public void SendToAll(socketCaptor cli , string message)
+        {
+            foreach (socketEmitor se in this._subcriptions) se.Send(message);
+        }
+
+        public void SendToAllOn(socketCaptor cli , string chanel , string message)
+        {
+            foreach (socketEmitor se in this._subcriptions) se.SendOn(chanel, message);
+        }
+    }
+
     // class corespondant au module capable de capter les message et de répondre
     class socketCaptor
     {
@@ -146,6 +190,8 @@ namespace socketCsharp
 
         private socketChanels chanels;
 
+        private socketSubscription _subscriptions = new socketSubscription();
+
         /* @{name}      socketEmitor
          * @{type}      public constructor
          * @{desc}      Constructeur de la class socketEmitor
@@ -160,19 +206,33 @@ namespace socketCsharp
             this.chanels = new socketChanels(this);
             this._setEndpoint();
             this._setListener();
+            this._setHandlers();
             this.serverTask = new Task(this._execServer);
         }
 
         public socketChanels Chanels(){ return this.chanels; }
 
         /*
+         * @{name}      Infos
+         * @{type}      public void
+         * @{desc}      
+         */
+        public void Infos()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"socketCaptor server is running on {this.IP()}:{this.Port()}");
+            Console.ResetColor();
+        }
+
+        /*
          * @{name}      Start
          * @{type}      public void
          * @{desc}      Permet de démarrer le serveur sur un thread.
          */
-        public void Start()
+        public socketCaptor Start()
         {
             this.serverTask.Start();
+            return this;
         }
 
         /*
@@ -193,6 +253,16 @@ namespace socketCsharp
             return this.port;
         }
 
+        public void Subscribe(string ipv6)
+        {
+            this._subscriptions.Add(ipv6);
+        }
+
+        public void Unsubscribe(string ipv6)
+        {
+            this._subscriptions.Remove(ipv6);
+        }
+
         /*
          * @{name}      On
          * @{type}      public int
@@ -207,6 +277,16 @@ namespace socketCsharp
             this._send(message);
             this._close();
             return true;
+        }
+
+        public void Emit(string message)
+        {
+            this._subscriptions.SendToAll(this,message);
+        }
+
+        public void EmitOn(string chanel, string message)
+        {
+            this._subscriptions.SendToAllOn(this, chanel , message);
         }
 
         /*
@@ -229,6 +309,33 @@ namespace socketCsharp
         private void _setListener()
         {
             this.listener = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        }
+
+        private void _setHandlers()
+        {
+            Func<dynamic, Message, bool> Subscribe = (dynamic cli, Message arg) =>
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write($"{this.ipHost.HostName}-");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write((arg.chanel == null ? $"general" : $"{arg.chanel}"));
+                Console.ResetColor();
+                Console.Write($" : {arg.message}");
+                Console.WriteLine();
+
+                cli.Subscribe(arg.message);
+                return cli.Reply("Souscris");
+            };
+
+            Func<dynamic, Message, bool> Unsubscribe = (dynamic cli, Message arg) =>
+            {
+                Console.WriteLine($"Delete d'abonement {arg.message}");
+                cli.Unsubscribe(arg.message);
+                return cli.Reply("Désouscris");
+            };
+
+            this.On("subscribe", Subscribe);            // création d'un chanel lié à un callback
+            this.On("unsubscribe", Unsubscribe);            // création d'un chanel lié à un callback
         }
 
         /*
@@ -274,8 +381,12 @@ namespace socketCsharp
         private void _print(Message data)
         {
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine((data.chanel == null ? $"General chanel receive : {data.message}" : $"{data.chanel} chanel recive : {data.message}"));
+            Console.Write($"{this.ipHost.HostName}-");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write((data.chanel == null ? $"general" : $"{data.chanel}"));
             Console.ResetColor();
+            Console.Write($" : {data.message}");
+            Console.WriteLine();
             if (data.chanel != null) this.chanels.Exec(data);
             else
             {
@@ -353,11 +464,45 @@ namespace socketCsharp
             this.chanels = new socketChanels(this);
         }
 
+        public IPAddress IP()
+        {
+            return this.ipAddr;
+        }
+
+        public socketEmitor Subscribe(string? ipv6 = null)
+        {
+            this.ipv6 = ipv6;
+            this.SendOn("subscribe", Dns.GetHostEntry(Dns.GetHostName()).AddressList[0].ToString());
+            return this;
+        }
+
+        /*
+         * @{name}      Infos
+         * @{type}      public void
+         * @{desc}      
+         */
+        public void Infos()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine((this.ipAddr == null ? $"socketEmitor is linked with unscribe:{11111}" : $"socketEmitor is linked with {this.ipAddr}:{11111}"));
+            Console.ResetColor();
+        }
+
+        /*
+         * @{name}      Connect
+         * @{type}      public void
+         * @{desc}      
+         */
         public void Connect()
         {
             this._connect();
         }
 
+        /*
+         * @{name}      SendOn
+         * @{type}      public void
+         * @{desc}      
+         */
         public void SendOn(string chanelName, string message)
         {
             this.Send($"{{" +
@@ -366,9 +511,13 @@ namespace socketCsharp
                 $"}}");
         }
 
+        /*
+         * @{name}      Send
+         * @{type}      public void
+         * @{desc}      
+         */
         public void Send(string message)
         {
-
             this._setEndpoint();
             this._setSender();
             this._connect();
@@ -385,9 +534,13 @@ namespace socketCsharp
             }
 
             this._close();
-
         }
 
+        /*
+         * @{name}      Close
+         * @{type}      public void
+         * @{desc}      
+         */
         public void Close()
         {
             try
@@ -420,14 +573,11 @@ namespace socketCsharp
          */
         private void _setEndpoint()
         {
-            if(this.ipv6 != null) Console.WriteLine(IPAddress.Parse(this.ipv6));
+            //if(this.ipv6 != null) Console.WriteLine(IPAddress.Parse(this.ipv6));
             this.ipHost = (this.ipv6 == null ? Dns.GetHostEntry(Dns.GetHostName()) : Dns.GetHostEntry(IPAddress.Parse(this.ipv6)));
-            Console.WriteLine(ipHost.AddressList.Length);
-            Console.WriteLine(ipHost.AddressList[0]);
             this.ipAddr = (this.ipv6 == null ? ipHost.AddressList[0] : IPAddress.Parse(this.ipv6));
-            this.localEndPoint = new IPEndPoint(ipAddr, 11111);
+            this.localEndPoint = new IPEndPoint(this.ipAddr, 11111);
         }
-
 
         /*
          * @{name}      _setListener
@@ -490,8 +640,10 @@ namespace socketCsharp
         private void _print(string message)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(message);
+            Console.Write($"{this.ipHost.HostName} ");
             Console.ResetColor();
+            Console.Write(message);
+            Console.WriteLine("");
         }
 
         /*
@@ -548,33 +700,75 @@ namespace socketCsharp
     class Program
     {
 
-        private static bool Test(dynamic cli , Message arg)
+        /*Exemple de création statique d'une fonction utilisée comme callback à un chanel*/
+        private static bool Test1(dynamic cli, Message arg)
         {
             return cli.Reply("C'est ma reponse");
         }
 
-        // Main Method
         static void Main(string[] args)
         {
 
-            socketCaptor se = new socketCaptor(11111);
-            Console.WriteLine(se.IP());     // affiche l'ip sur lequel tourne le serveur
-            Console.WriteLine(se.Port());   // affiche le port sur lequel tourne le serveur
+            ////////////////////////
+            ///////EXEMPLES/////////
+            ////////////////////////
 
-            se.On("Test", Test);            // création d'un chanel lié à un callback
-            se.Chanels().Delete("Test");    // suppersion du chanel
 
-            se.Start();                     // Démare le serveur Socket
+            ////////////////////////
+            /////SOCKETCAPTOR///////
+            ////////////////////////
 
-            socketEmitor sc = new socketEmitor("fe80::45f4:89d7:78f4:68fb");
-            sc.Send("Test Data");           // Envois d'un premier message
-            sc.Send("Test Data2");          // Envois d'un deuxième message
+            /*instancie et démarre le serveur sur une seule ligne | peut se faire sur deux ligne*/
+            socketCaptor sc = new socketCaptor(11111).Start();
 
-            // Erreur sur l'appel d'un chanel non existant - serveur se bloque A REGLER
-            //sc.SendOn("Test", "helloworld");// Envois d'un troisième message sur un chanel - Erreur puisque le chanel à été supprimer
+            /*Affiche les infos du serveur*/
+            sc.Infos();
 
-            se.On("Test", Test);            // création d'un chanel lié à un callback
-            sc.SendOn("Test", "helloworld");// Envois d'un troisième message sur un chanel - Succes puisque le chanel à été recréer
+            ////////////////////////
+            ////////CHANELS/////////
+            ////////////////////////
+
+            /*création statique d'un chanel lié à un callback*/
+            sc.On("Test1", Test1);
+
+            /*création dynamique d'un chanel lié à un callback*/
+            sc.On("Test2", (dynamic cli, Message arg) =>
+            {
+                return cli.Reply("lol");
+            });
+
+            /*Exemple de suppression - /!\ CREER UNE ERREUR /!\*/
+            //se.Chanels().Delete("Test");
+
+            ////////////////////////
+            /////SOCKETEMITOR///////
+            ////////////////////////
+
+            /*Instancie et Souscris l'émeteur à un serveur | peut se faire sur deux ligne*/
+            socketEmitor se = new socketEmitor().Subscribe("fe80::45f4:89d7:78f4:68fb");
+
+            /*Affiche les infos de l'émeteur*/
+            se.Infos();
+
+            ////////////////////////
+            ////////MESSAGES////////
+            ////////////////////////
+
+            /*Envois d'un premier message sur le chanel général*/
+            se.Send("Test Data");
+            /*Envois d'un deuxième message sur le chanel général*/
+            se.Send("Test Data2");
+            /*Envois d'un message sur un chanel particulier*/
+            se.SendOn("Test1", "helloworld");
+
+            ////////////////////////
+            //////////EMIT//////////
+            ////////////////////////
+
+            /*Envois d'une information à tout utilisateur inscrit sur le serveur*/
+            sc.Emit("Hello Tout le monde");
+            /*Envois d'une information à sur le chanel correspondant à chaque utilisateur inscrit sur le serveur*/
+            sc.EmitOn("Test2","Salut tout le monde!");
 
             Console.ReadKey();
 
