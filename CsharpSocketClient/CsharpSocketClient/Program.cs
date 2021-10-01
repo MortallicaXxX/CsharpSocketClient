@@ -745,7 +745,7 @@ namespace socketCsharp
             ////////////////////////
 
             /*Instancie et Souscris l'émeteur à un serveur | peut se faire sur deux ligne*/
-            socketEmitor se = new socketEmitor().Subscribe("fe80::45f4:89d7:78f4:68fb");
+            socketEmitor se = new socketEmitor().Subscribe();
 
             /*Affiche les infos de l'émeteur*/
             se.Infos();
