@@ -420,9 +420,11 @@ namespace socketCsharp
          */
         private void _setEndpoint()
         {
-            Console.WriteLine(IPAddress.Parse(this.ipv6));
+            if(this.ipv6 != null) Console.WriteLine(IPAddress.Parse(this.ipv6));
             this.ipHost = (this.ipv6 == null ? Dns.GetHostEntry(Dns.GetHostName()) : Dns.GetHostEntry(IPAddress.Parse(this.ipv6)));
-            this.ipAddr = (ipHost.AddressList.Length > 0 ? ipHost.AddressList[0] : IPAddress.Parse(this.ipv6));
+            Console.WriteLine(ipHost.AddressList.Length);
+            Console.WriteLine(ipHost.AddressList[0]);
+            this.ipAddr = (this.ipv6 == null ? ipHost.AddressList[0] : IPAddress.Parse(this.ipv6));
             this.localEndPoint = new IPEndPoint(ipAddr, 11111);
         }
 
