@@ -6,20 +6,25 @@ using System.Net.Sockets;
 
 namespace CsharpSocketClient.models
 {
-    class SocketEmitor
+    public class SocketEmitor
     {
         private string ipv6;
+        private int _hostPort;
         private IPHostEntry ipHost;
+
         private IPAddress ipAddr;
         private IPEndPoint localEndPoint;
         private Socket sender;
 
         private bool isConnected = false;
 
+        private Message _reply = new Message("");
+
         private SocketChanels chanels;
 
-        public SocketEmitor(string? ipv6 = null)
+        public SocketEmitor(int port , string? ipv6 = null)
         {
+            this._hostPort = port;
             this.ipv6 = ipv6;
             this.chanels = new SocketChanels(this);
         }
@@ -63,9 +68,9 @@ namespace CsharpSocketClient.models
          * @{type}      public void
          * @{desc}      
          */
-        public void SendOn(string chanelName, string message)
+        public SocketEmitor SendOn(string chanelName, string message)
         {
-            this.Send($"{{" +
+            return this.Send($"{{" +
                 $"\"chanel\" : \"{chanelName}\"," +
                 $"\"data\" : \"{message}\"" +
                 $"}}");
@@ -76,7 +81,7 @@ namespace CsharpSocketClient.models
          * @{type}      public void
          * @{desc}      
          */
-        public void Send(string message)
+        public SocketEmitor Send(string message)
         {
             this._setEndpoint();
             this._setSender();
@@ -86,14 +91,25 @@ namespace CsharpSocketClient.models
             {
                 if (this.isConnected == false) throw new InvalidCastException("Socket n'est pas connecter au point d'accès.");
                 this._send(message);
-                this._print(this._Onmessage());
+                this._reply = new Message(this._Onmessage());
+                this._print(this._reply.message);
             }
             catch (InvalidCastException e)
             {
-                this._OnError("InvalidCastException", e.Message);
+                this._OnError("InvalidCastException", e);
             }
-
             this._close();
+            return this;
+        }
+
+        public void Print(string message)
+        {
+            this._print(message);
+        }
+
+        public void OnReply(Action<dynamic,Message> callback)
+        {
+            callback(this, this._reply);
         }
 
         /*
@@ -110,13 +126,13 @@ namespace CsharpSocketClient.models
             }
             catch (InvalidCastException e)
             {
-                this._OnError("InvalidCastException", e.Message);
+                this._OnError("InvalidCastException", e);
             }
         }
 
-        public void OnError(string? type, string message)
+        public void OnError(string? type, dynamic error)
         {
-            this._OnError(type, message);
+            this._OnError(type, error);
         }
 
         /*
@@ -138,8 +154,8 @@ namespace CsharpSocketClient.models
          */
         private void _setEndpoint()
         {
-            //if(this.ipv6 != null) Console.WriteLine(IPAddress.Parse(this.ipv6));
-            this.ipHost = (this.ipv6 == null ? Dns.GetHostEntry(Dns.GetHostName()) : Dns.GetHostEntry(IPAddress.Parse(this.ipv6)));
+            this._reply = new Message("");
+            this.ipHost = Dns.GetHostEntry(Dns.GetHostName());
             this.ipAddr = (this.ipv6 == null ? ipHost.AddressList[0] : IPAddress.Parse(this.ipv6));
             this.localEndPoint = new IPEndPoint(this.ipAddr, 11111);
         }
@@ -169,17 +185,17 @@ namespace CsharpSocketClient.models
             }
             catch (ArgumentNullException ane)
             {
-                this._OnError("ArgumentNullException", ane.Message);
+                this._OnError("ArgumentNullException", ane);
             }
 
             catch (SocketException se)
             {
-                this._OnError("SocketException", se.Message);
+                this._OnError("SocketException", se);
             }
 
             catch (Exception e)
             {
-                this._OnError("Exception", e.Message);
+                this._OnError("Exception", e);
             }
         }
 
@@ -228,17 +244,17 @@ namespace CsharpSocketClient.models
             // Gestion des erreurs de sockets
             catch (ArgumentNullException ane)
             {
-                Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
+                Console.WriteLine("ArgumentNullException : {0}", ane);
             }
 
             catch (SocketException se)
             {
-                Console.WriteLine("SocketException : {0}", se.ToString());
+                Console.WriteLine("SocketException : {0}", se);
             }
 
             catch (Exception e)
             {
-                Console.WriteLine("Unexpected exception : {0}", e.ToString());
+                Console.WriteLine("Unexpected exception : {0}", e);
             }
         }
 
@@ -257,7 +273,7 @@ namespace CsharpSocketClient.models
             }
             catch (SocketException e)
             {
-                this._OnError("SocketException" , e.Message);
+                this._OnError("SocketException" , e);
             }
         }
 
@@ -266,14 +282,16 @@ namespace CsharpSocketClient.models
             this.isConnected = (this.isConnected == false ? true : false);
         }
 
-        private void _OnError(string? type , string message)
+        private void _OnError(string? type , dynamic error)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write($"{this.ipHost.HostName}-");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write($"{type}");
+            Console.Write($"{type} ");
+            Console.Write($"{error.StackTrace.Split("\\")[error.StackTrace.Split("\\").Length - 1].Split(":line")[0]}:");
+            Console.Write($"{error.StackTrace.Split(":line ")[error.StackTrace.Split(":line ").Length - 1]} ");
             Console.ResetColor();
-            Console.Write($" {message}");
+            Console.Write($"{error.Message}");
             Console.WriteLine("");
         }
 

@@ -18,7 +18,7 @@ namespace CsharpSocketClient.models
 
         public void Add(string ipv6)
         {
-            this._subcriptions.Add(new SocketEmitor(ipv6));
+            this._subcriptions.Add(new SocketEmitor(11111,ipv6));
         }
 
         public void Remove(string subIp)

@@ -26,6 +26,10 @@ namespace CsharpSocketClient.models
 
         private SocketSubscription _subscriptions = new SocketSubscription();
 
+        ////////////////////////
+        /////////PUBLIC/////////
+        ////////////////////////
+
         /* @{name}      socketEmitor
          * @{type}      public constructor
          * @{desc}      Constructeur de la class socketEmitor
@@ -97,9 +101,9 @@ namespace CsharpSocketClient.models
             this._subscriptions.Remove(ipv6);
         }
 
-        public void OnError(string? type , string message)
+        public void OnError(string? type , dynamic error)
         {
-            this._OnError(type,message);
+            this._OnError(type, error);
         }
 
         /*
@@ -113,7 +117,10 @@ namespace CsharpSocketClient.models
 
         public bool Reply(string message)
         {
-            this._send(message);
+            this._send($"{{" +
+                $"\"chanel\" : \"reply\"," +
+                $"\"data\" : \"{message}\"" +
+                $"}}");
             this._close();
             return true;
         }
@@ -127,6 +134,10 @@ namespace CsharpSocketClient.models
         {
             this._subscriptions.SendToAllOn(this, chanel, message);
         }
+
+        ////////////////////////
+        /////////Private////////
+        ////////////////////////
 
         /*
          * @{name}      _setEndpoint
@@ -217,7 +228,7 @@ namespace CsharpSocketClient.models
          * @{type}      private void
          * @{desc}      Affichage en bleu d'un message dans la console.
          */
-        private void _print(Message data)
+        private async void _print(Message data)
         {
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.Write($"{this.ipHost.HostName}-");
@@ -282,14 +293,14 @@ namespace CsharpSocketClient.models
             this.clientSocket.Close();
         }
 
-        private void _OnError(string? type, string message)
+        private void _OnError(string? type, dynamic error)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write($"{this.ipHost.HostName}-");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write($"{type}");
             Console.ResetColor();
-            Console.Write($" {message}");
+            Console.Write($" {error.Message}");
             Console.WriteLine("");
         }
 

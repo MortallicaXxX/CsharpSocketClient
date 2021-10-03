@@ -27,7 +27,7 @@ namespace CsharpSocketClient.models
             }
             catch (Exception e)
             {
-                this.root.OnError("Exception" , e.Message);
+                this.root.OnError("Exception" , e);
             }
         }
 

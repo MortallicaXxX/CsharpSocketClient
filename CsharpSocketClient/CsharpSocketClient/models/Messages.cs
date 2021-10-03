@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace CsharpSocketClient.models
 {
-    class Message
+    public class Message
     {
 
         private string? _chanel = null;
