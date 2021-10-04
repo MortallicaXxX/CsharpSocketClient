@@ -34,7 +34,7 @@ namespace CsharpSocketClient.models
         * @{name}      Send
         * @{type}      public IPAddress
         */
-        public SocketEmitor SendOn(string chanel,string message)
+        public SocketEmitor SendOn(string chanel,string message = "")
         {
             return this._sender.SendOn(chanel, message);
         }

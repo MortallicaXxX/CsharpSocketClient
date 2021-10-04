@@ -71,6 +71,7 @@ namespace CsharpSocketClient.models
         public SocketEmitor SendOn(string chanelName, string message)
         {
             return this.Send($"{{" +
+                $"\"eventTime\" : \"{(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds.ToString()}\"," +
                 $"\"chanel\" : \"{chanelName}\"," +
                 $"\"data\" : \"{message}\"" +
                 $"}}");

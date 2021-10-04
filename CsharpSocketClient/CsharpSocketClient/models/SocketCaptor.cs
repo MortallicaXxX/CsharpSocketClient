@@ -184,8 +184,14 @@ namespace CsharpSocketClient.models
                 return cli.Reply("Désouscris");
             };
 
-            this.On("subscribe", Subscribe);            // création d'un chanel lié à un callback
-            this.On("unsubscribe", Unsubscribe);            // création d'un chanel lié à un callback
+            Func<dynamic, Message, bool> Ping = (dynamic cli, Message arg) =>
+            {
+                return cli.Reply($"ping - {Encoding.UTF8.GetByteCount(arg.message).ToString()} byte recive in {(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds - arg.eventTime} ms");
+            };
+
+            this.On("subscribe", Subscribe);
+            this.On("unsubscribe", Unsubscribe);
+            this.On("ping", Ping);
         }
 
         /*
@@ -298,7 +304,9 @@ namespace CsharpSocketClient.models
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write($"{this.ipHost.HostName}-");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write($"{type}");
+            Console.Write($"{type} ");
+            Console.Write($"{error.StackTrace.Split("\\")[error.StackTrace.Split("\\").Length - 1].Split(":line")[0]}:");
+            Console.Write($"{error.StackTrace.Split(":line ")[error.StackTrace.Split(":line ").Length - 1]} ");
             Console.ResetColor();
             Console.Write($" {error.Message}");
             Console.WriteLine("");

@@ -19,28 +19,34 @@ namespace socketCsharp
             ///////EXEMPLES/////////
             ////////////////////////
 
-            SocketRouter router = new SocketRouter().Start().Subscribe("fe80::fdba:3812:1a1f:5d7b");
+            SocketRouter router = new SocketRouter().Start().Subscribe();
 
             router.Infos();
 
             //router.Test();
 
-/*            router.On("callback_Test1", Test1);
+            //router.Send("data");
+            router.SendOn("ping", "testPing").OnReply((dynamic cli , Message arg) =>
+             {
+                 Console.WriteLine($"Callback sur la reception du message Ping : ${arg.message}");
+             });
 
-            router.On("callback_Test2", (dynamic cli, Message arg) =>
-            {
-                return cli.Reply("Reply callback_Test2");
-            });
+            /*            router.On("callback_Test1", Test1);
 
-            router.On("callback_Test3", (dynamic cli, Message arg) =>
-            {
-                return cli.Reply("Reply callback_Test3");
-            });
+                        router.On("callback_Test2", (dynamic cli, Message arg) =>
+                        {
+                            return cli.Reply("Reply callback_Test2");
+                        });
 
-            router.On("callback_Test4", (dynamic cli, Message arg) =>
-            {
-                return cli.Reply("Reply callback_Test4");
-            });*/
+                        router.On("callback_Test3", (dynamic cli, Message arg) =>
+                        {
+                            return cli.Reply("Reply callback_Test3");
+                        });
+
+                        router.On("callback_Test4", (dynamic cli, Message arg) =>
+                        {
+                            return cli.Reply("Reply callback_Test4");
+                        });*/
 
             /*            router.Emit("RouteurTest send Emit");
                         router.EmitOn("callback_Test3" , "RouteurTest send Emit on chanel");*/
