@@ -86,18 +86,7 @@ namespace CsharpSocketClient.models
             this._setEndpoint();
             this._setSender();
             this._connect();
-
-            try
-            {
-                if (this.isConnected == false) throw new InvalidCastException("Socket n'est pas connecter au point d'accès.");
-                this._send(message);
-                this._reply = new Message(this._Onmessage());
-                this._print(this._reply.message);
-            }
-            catch (InvalidCastException e)
-            {
-                this._OnError("InvalidCastException", e);
-            }
+            this._execClient(message);
             this._close();
             return this;
         }
@@ -232,29 +221,18 @@ namespace CsharpSocketClient.models
          * @{desc}      Établissez le point de terminaison distant pour le socket. Cet exemple utilise le port 11111 sur l’ordinateur local.
          *              Modifie en interne les valeurs de ipHost , ipAddr , localEndPoint
          */
-        private void _execClient()
+        private void _execClient(string message)
         {
             try
             {
-                this._connect();                        // connexion au endpoint
-                this._send("C'est un test les kheys");   // Envois d'un message
-                this._print(this._Onmessage());         // impression dans la console du message de reçeption
-                this._close();                          // fermeture du socket
+                if (this.isConnected == false) throw new InvalidCastException("Socket n'est pas connecter au point d'accès.");
+                this._send(message);
+                this._reply = new Message(this._Onmessage());
+                this._print(this._reply.message);
             }
-            // Gestion des erreurs de sockets
-            catch (ArgumentNullException ane)
+            catch (InvalidCastException e)
             {
-                Console.WriteLine("ArgumentNullException : {0}", ane);
-            }
-
-            catch (SocketException se)
-            {
-                Console.WriteLine("SocketException : {0}", se);
-            }
-
-            catch (Exception e)
-            {
-                Console.WriteLine("Unexpected exception : {0}", e);
+                this._OnError("InvalidCastException", e);
             }
         }
 

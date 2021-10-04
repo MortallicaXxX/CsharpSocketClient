@@ -19,11 +19,11 @@ namespace socketCsharp
             ///////EXEMPLES/////////
             ////////////////////////
 
-            SocketRouter router = new SocketRouter().Start().Subscribe();
+            SocketRouter router = new SocketRouter().Start().Subscribe("fe80::fdba:3812:1a1f:5d7b");
 
             router.Infos();
 
-            router.Test();
+            //router.Test();
 
 /*            router.On("callback_Test1", Test1);
 
