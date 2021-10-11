@@ -1,0 +1,14 @@
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\bin\Debug\netcoreapp3.1\CsharpSocketClient.exe
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\bin\Debug\netcoreapp3.1\CsharpSocketClient.deps.json
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\bin\Debug\netcoreapp3.1\CsharpSocketClient.runtimeconfig.json
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\bin\Debug\netcoreapp3.1\CsharpSocketClient.runtimeconfig.dev.json
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\bin\Debug\netcoreapp3.1\CsharpSocketClient.dll
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\bin\Debug\netcoreapp3.1\CsharpSocketClient.pdb
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\netcoreapp3.1\CsharpSocketClient.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\netcoreapp3.1\CsharpSocketClient.AssemblyInfoInputs.cache
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\netcoreapp3.1\CsharpSocketClient.AssemblyInfo.cs
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\netcoreapp3.1\CsharpSocketClient.csproj.CoreCompileInputs.cache
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\netcoreapp3.1\CsharpSocketClient.dll
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\netcoreapp3.1\CsharpSocketClient.pdb
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\netcoreapp3.1\CsharpSocketClient.genruntimeconfig.cache
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\netcoreapp3.1\CsharpSocketClient.csproj.AssemblyReference.cache

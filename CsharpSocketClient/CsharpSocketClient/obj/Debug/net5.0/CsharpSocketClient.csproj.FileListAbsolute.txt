@@ -1,0 +1,16 @@
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\bin\Debug\net5.0\CsharpSocketClient.exe
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\bin\Debug\net5.0\CsharpSocketClient.deps.json
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\bin\Debug\net5.0\CsharpSocketClient.runtimeconfig.json
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\bin\Debug\net5.0\CsharpSocketClient.runtimeconfig.dev.json
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\bin\Debug\net5.0\CsharpSocketClient.dll
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\bin\Debug\net5.0\ref\CsharpSocketClient.dll
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\bin\Debug\net5.0\CsharpSocketClient.pdb
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\net5.0\CsharpSocketClient.csproj.AssemblyReference.cache
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\net5.0\CsharpSocketClient.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\net5.0\CsharpSocketClient.AssemblyInfoInputs.cache
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\net5.0\CsharpSocketClient.AssemblyInfo.cs
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\net5.0\CsharpSocketClient.csproj.CoreCompileInputs.cache
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\net5.0\CsharpSocketClient.dll
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\net5.0\ref\CsharpSocketClient.dll
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\net5.0\CsharpSocketClient.pdb
+C:\Users\Morta\OneDrive\Documents\C#\CsharpSocketClient\CsharpSocketClient\CsharpSocketClient\obj\Debug\net5.0\CsharpSocketClient.genruntimeconfig.cache

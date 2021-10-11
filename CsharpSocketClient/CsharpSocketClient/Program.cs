@@ -19,7 +19,7 @@ namespace socketCsharp
             ///////EXEMPLES/////////
             ////////////////////////
 
-            SocketRouter router = new SocketRouter().Start().Subscribe();
+            SocketRouter router = new SocketRouter().Start().Subscribe("127.0.0.1");
 
             router.Infos();
 
@@ -30,6 +30,11 @@ namespace socketCsharp
              {
                  Console.WriteLine($"Callback sur la reception du message Ping : ${arg.message}");
              });
+
+            router.SendOn("ping", "testPing").OnReply((dynamic cli, Message arg) =>
+            {
+                Console.WriteLine($"Callback sur la reception du message Ping : ${arg.message}");
+            });
 
             /*            router.On("callback_Test1", Test1);
 

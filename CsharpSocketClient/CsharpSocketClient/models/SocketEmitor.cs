@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.Diagnostics;
 
 namespace CsharpSocketClient.models
 {
@@ -50,6 +51,7 @@ namespace CsharpSocketClient.models
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine((this.ipAddr == null ? $"socketEmitor is linked with unscribe:{11111}" : $"socketEmitor is linked with {this.ipAddr}:{11111}"));
+            Debug.WriteLine((this.ipAddr == null ? $"socketEmitor is linked with unscribe:{11111}" : $"socketEmitor is linked with {this.ipAddr}:{11111}"));
             Console.ResetColor();
         }
 
@@ -147,7 +149,7 @@ namespace CsharpSocketClient.models
             this._reply = new Message("");
             this.ipHost = Dns.GetHostEntry(Dns.GetHostName());
             this.ipAddr = (this.ipv6 == null ? ipHost.AddressList[0] : IPAddress.Parse(this.ipv6));
-            this.localEndPoint = new IPEndPoint(this.ipAddr, 11111);
+            this.localEndPoint = new IPEndPoint(this.ipAddr, 8080);
         }
 
         /*
@@ -214,6 +216,10 @@ namespace CsharpSocketClient.models
             Console.ResetColor();
             Console.Write(message);
             Console.WriteLine("");
+
+            Debug.Write($"{this.ipHost.HostName} ");
+            Debug.Write(message);
+            Debug.WriteLine("");
         }
 
         /*
@@ -272,6 +278,13 @@ namespace CsharpSocketClient.models
             Console.ResetColor();
             Console.Write($"{error.Message}");
             Console.WriteLine("");
+
+            Debug.Write($"{this.ipHost.HostName}-");
+            Debug.Write($"{type} ");
+            Debug.Write($"{error.StackTrace.Split("\\")[error.StackTrace.Split("\\").Length - 1].Split(":line")[0]}:");
+            Debug.Write($"{error.StackTrace.Split(":line ")[error.StackTrace.Split(":line ").Length - 1]} ");
+            Debug.Write($"{error.Message}");
+            Debug.WriteLine("");
         }
 
     }
